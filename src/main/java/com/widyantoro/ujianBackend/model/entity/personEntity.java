@@ -17,7 +17,7 @@ public class personEntity {
     @Column(name = "id_person", length = 25, nullable = false)
     private Integer idPerson;
 
-	@Column(name = "nik", length = 16)
+	@Column(name = "nik",unique=true, length = 16)
     private String nik;
 	
 	@Column(name = "nama", length = 50)

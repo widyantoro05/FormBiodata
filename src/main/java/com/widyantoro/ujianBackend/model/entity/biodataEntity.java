@@ -30,19 +30,19 @@ public class biodataEntity {
 	@Column(name = "tempat_lahir",length = 50)
     private String tempatLahir;
 	
-//	@OneToOne
-//	@JoinColumn(name="id_person",nullable = false)
-//	private personEntity personEntity;
+	@OneToOne
+	@JoinColumn(name="id_person", unique=true, nullable = false)
+	private personEntity personEntity;
 //	
-////set get biodata entity
-//	
-//	public personEntity getPersonEntity() {
-//		return personEntity;
-//	}
-//
-//	public void setPersonEntity(personEntity personEntity) {
-//		this.personEntity = personEntity;
-//	}
+//set get biodata entity
+	
+	public personEntity getPersonEntity() {
+		return personEntity;
+	}
+
+	public void setPersonEntity(personEntity personEntity) {
+		this.personEntity = personEntity;
+	}
 
 	public Integer getIdBio() {
 		return idBio;
