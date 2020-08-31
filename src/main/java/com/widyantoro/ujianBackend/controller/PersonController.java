@@ -1,5 +1,7 @@
 package com.widyantoro.ujianBackend.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,10 +46,24 @@ public class PersonController {
     
     @PostMapping
     public messageDto insert(@RequestBody personDto dto) {
+    	Date date= dto.getTanggalLahir();
+    	Calendar n= Calendar.getInstance();
+    	n.setTime(date);
+    	int tahunLahir= n.get(Calendar.YEAR);
+//    	Calendar nm= Calendar.getInstance();
+//    	Date nmn= nm.getTime();
+//    	n.setTime(nmn);
+//    	int tahunSekarang= n.get(Calendar.YEAR);
+//    	
+//    	
     	
     	if (dto.getNik().length()!=16) {
     		return statusGagalNik();
-    	}else {
+    		
+    	}else if (2020-tahunLahir>=30) {
+    		return statusGagalUmur();
+    	}
+    	else {
     		personEntity person= convertToEntity(dto);
     		personService.insertPerson(person);
     		dto.setIdPerson(person.getIdPerson());
