@@ -1,6 +1,6 @@
 package com.widyantoro.ujianBackend.model.dto;
 
-public class messageDto {
+public class MessageDto {
 	private String message;
 	private String status;
 	

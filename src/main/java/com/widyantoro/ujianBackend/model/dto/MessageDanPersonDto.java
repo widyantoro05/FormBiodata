@@ -9,6 +9,21 @@ public class MessageDanPersonDto {
 	private Date tanggalLahir;
 	private String tempatLahir;
 	private String noHp;
+	private Integer umur;
+	private String jenjangPendidikan;
+	
+	public Integer getUmur() {
+		return umur;
+	}
+	public void setUmur(Integer umur) {
+		this.umur = umur;
+	}
+	public String getJenjangPendidikan() {
+		return jenjangPendidikan;
+	}
+	public void setJenjangPendidikan(String jenjangPendidikan) {
+		this.jenjangPendidikan = jenjangPendidikan;
+	}
 	public String getNik() {
 		return nik;
 	}

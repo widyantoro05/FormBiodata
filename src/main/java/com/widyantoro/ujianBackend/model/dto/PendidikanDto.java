@@ -1,20 +1,12 @@
 package com.widyantoro.ujianBackend.model.dto;
 
-public class pendidikanDto {
+public class PendidikanDto {
 	private Integer idPendidikan;
-	private Integer idPerson;
 	private String jenjang;
 	private String institusi;
 	private String tahunMasuk;
 	private String tahunLulus;
-	
-//	set get person
-	public Integer getIdPerson() {
-		return idPerson;
-	}
-	public void setIdPerson(Integer idPerson) {
-		this.idPerson = idPerson;
-	}
+
 	
 //	set get pendidikan dto
 	

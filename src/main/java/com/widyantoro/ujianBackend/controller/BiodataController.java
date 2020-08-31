@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.widyantoro.ujianBackend.model.dto.pendidikanDto;
-import com.widyantoro.ujianBackend.model.entity.pendidikanEntity;
-import com.widyantoro.ujianBackend.model.entity.personEntity;
-import com.widyantoro.ujianBackend.repository.pendidikanRepository;
-import com.widyantoro.ujianBackend.repository.personRepository;
+import com.widyantoro.ujianBackend.model.dto.PendidikanDto;
+import com.widyantoro.ujianBackend.model.entity.PendidikanEntity;
+import com.widyantoro.ujianBackend.model.entity.PersonEntity;
+import com.widyantoro.ujianBackend.repository.PendidikanRepository;
+import com.widyantoro.ujianBackend.repository.PersonRepository;
 
 @RestController
 @RequestMapping("/pendidikan")
-public class pendidikanController {
-	private final pendidikanRepository pendRepository;
-    private final personRepository persRepository;
+public class BiodataController {
+	private final PendidikanRepository pendRepository;
+    private final PersonRepository persRepository;
 
     @Autowired
-    public pendidikanController(pendidikanRepository pendRepository, personRepository persRepository) {
+    public BiodataController(PendidikanRepository pendRepository, PersonRepository persRepository) {
         this.pendRepository = pendRepository;
         this.persRepository = persRepository;
     }
@@ -32,18 +32,18 @@ public class pendidikanController {
 
     // http://localhost:8080/kecamatan
     @GetMapping
-    public List<pendidikanDto> get() {
-        List<pendidikanEntity> pendList = pendRepository.findAll();
-        List<pendidikanDto> pendDtoList = pendList.stream().map(this::convertToDto)
+    public List<PendidikanDto> get() {
+        List<PendidikanEntity> pendList = pendRepository.findAll();
+        List<PendidikanDto> pendDtoList = pendList.stream().map(this::convertToDto)
                 .collect(Collectors.toList());
         return pendDtoList;
     }
 
     // http://localhost:8080/kecamatan/3303
     @GetMapping("/{id_pendidikan}")
-    public pendidikanDto get(@PathVariable Integer id) {
+    public PendidikanDto get(@PathVariable Integer id) {
         if(pendRepository.findById(id).isPresent()){
-            pendidikanDto pendDto =  convertToDto(pendRepository.findById(id).get());
+            PendidikanDto pendDto =  convertToDto(pendRepository.findById(id).get());
             return pendDto;
         }
         return null;
@@ -61,8 +61,8 @@ public class pendidikanController {
 //    }
     /*Insert Data*/
     @PostMapping
-    public pendidikanDto insert(@RequestBody pendidikanDto dto) {
-        pendidikanEntity pendidikan = convertToEntity(dto);
+    public PendidikanDto insert(@RequestBody PendidikanDto dto) {
+        PendidikanEntity pendidikan = convertToEntity(dto);
         pendRepository.save(pendidikan);
         return convertToDto(pendidikan);
     }
@@ -85,29 +85,29 @@ public class pendidikanController {
 //        return convertToDto(pend);
 //    }
 
-    private pendidikanEntity convertToEntity(pendidikanDto dto){
-        pendidikanEntity pendidikan = new pendidikanEntity();
+    private PendidikanEntity convertToEntity(PendidikanDto dto){
+        PendidikanEntity pendidikan = new PendidikanEntity();
         pendidikan.setIdPendidikan(dto.getIdPendidikan());
         pendidikan.setInstitusi(dto.getInstitusi());
         pendidikan.setJenjang(dto.getJenjang());
         pendidikan.setTahunLulus(dto.getTahunLulus());
         pendidikan.setTahunMasuk(dto.getTahunMasuk());
 
-        if(persRepository.findById(dto.getIdPerson()).isPresent()){
-            personEntity person =  persRepository.findById(dto.getIdPerson()).get();
-            pendidikan.setPerson(person);
-        }
+//        if(persRepository.findById(dto.getIdPerson()).isPresent()){
+//            personEntity person =  persRepository.findById(dto.getIdPerson()).get();
+//            pendidikan.setPerson(person);
+//        }
         return pendidikan;
     }
 
-    private pendidikanDto convertToDto(pendidikanEntity pend){
-        pendidikanDto dto = new pendidikanDto();
+    private PendidikanDto convertToDto(PendidikanEntity pend){
+        PendidikanDto dto = new PendidikanDto();
         dto.setIdPendidikan(pend.getIdPendidikan());
         dto.setInstitusi(pend.getInstitusi());
         dto.setJenjang(pend.getJenjang());
         dto.setTahunLulus(pend.getJenjang());
-        dto.setTahunMasuk(pend.getTahunMasuk());
-        dto.setIdPerson(pend.getPerson().getIdPerson());
+//        dto.setTahunMasuk(pend.getTahunMasuk());
+//        dto.setIdPerson(pend.getPerson().getIdPerson());
         return dto;
     }
 }

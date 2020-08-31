@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="t_biodata")
-public class biodataEntity {
+public class BiodataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bio", length = 25, nullable = false)
@@ -32,15 +32,15 @@ public class biodataEntity {
 	
 	@OneToOne
 	@JoinColumn(name="id_person", unique=true, nullable = false)
-	private personEntity personEntity;
+	private PersonEntity personEntity;
 //	
 //set get biodata entity
 	
-	public personEntity getPersonEntity() {
+	public PersonEntity getPersonEntity() {
 		return personEntity;
 	}
 
-	public void setPersonEntity(personEntity personEntity) {
+	public void setPersonEntity(PersonEntity personEntity) {
 		this.personEntity = personEntity;
 	}
 

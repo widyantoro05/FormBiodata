@@ -2,7 +2,7 @@ package com.widyantoro.ujianBackend.model.dto;
 
 import java.sql.Date;
 
-public class personDto {
+public class PersonDto {
 	private Integer idPerson;
 	private String nik;
 	private String nama;

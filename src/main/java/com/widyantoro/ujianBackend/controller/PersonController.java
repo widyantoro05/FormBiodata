@@ -19,38 +19,39 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.widyantoro.ujianBackend.model.dto.MessageDanPersonDto;
-import com.widyantoro.ujianBackend.model.dto.messageDto;
-import com.widyantoro.ujianBackend.model.dto.personDto;
-import com.widyantoro.ujianBackend.model.entity.biodataEntity;
-import com.widyantoro.ujianBackend.model.entity.personEntity;
-import com.widyantoro.ujianBackend.repository.biodataRepository;
-import com.widyantoro.ujianBackend.repository.pendidikanRepository;
-import com.widyantoro.ujianBackend.repository.personRepository;
-import com.widyantoro.ujianBackend.service.personService;
-import com.widyantoro.ujianBackend.service.personServiceImplements;
+import com.widyantoro.ujianBackend.model.dto.MessageDto;
+import com.widyantoro.ujianBackend.model.dto.PersonDto;
+import com.widyantoro.ujianBackend.model.entity.BiodataEntity;
+import com.widyantoro.ujianBackend.model.entity.PersonEntity;
+import com.widyantoro.ujianBackend.repository.BiodataRepository;
+import com.widyantoro.ujianBackend.repository.PendidikanRepository;
+import com.widyantoro.ujianBackend.repository.PersonRepository;
+import com.widyantoro.ujianBackend.service.PersonService;
+import com.widyantoro.ujianBackend.service.PersonServiceImplements;
 
 
 @RestController
 @RequestMapping("/person")
 public class PersonController {
-	private final personRepository personRepository;
-	private final biodataRepository biodataRepository;
-	private final pendidikanRepository pendRepository;
+	private final PersonRepository personRepository;
+	private final BiodataRepository biodataRepository;
+	private final PendidikanRepository pendRepository;
 
     @Autowired
-    public PersonController(personRepository personRepository, biodataRepository bio, pendidikanRepository pend) {
+    public PersonController(PersonRepository personRepository, BiodataRepository bio, PendidikanRepository pend) {
         this.personRepository = personRepository;
         this.biodataRepository=bio;
         this.pendRepository=pend;
     }
     @Autowired
-    private personService personService;
+    private PersonService personService;
 
     // http://localhost:1212/person
     @GetMapping("/{nik}")
     public MappingJacksonValue getDataByNik(@PathVariable String nik) { 
-    	messageDto pesan =new messageDto();
+    	MessageDto pesan =new MessageDto();
     	MessageDanPersonDto person= new MessageDanPersonDto();
+    	PersonDto dto= new PersonDto();
     	if (nik.length()!=16) {
     		pesan.setStatus("false");
     		pesan.setMessage("data gagal masuk, jumlah digit tidak sama dengan 16");
@@ -62,9 +63,9 @@ public class PersonController {
     	}
     	else if (personRepository.getNikByNik(nik)==null) {
     		pesan.setStatus("false");
-    		pesan.setMessage("data gagal masuk" + nik + "tidak terdapat dalam database");
+    		pesan.setMessage("data gagal masuk" +" "+ nik +" "+ "tidak terdapat dalam database");
     		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
-    		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan Error", filter);
+    		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan Error tidak ada niknya", filter);
     		MappingJacksonValue mapp= new MappingJacksonValue(pesan);
     		mapp.setFilters(filters);
     		return mapp;
@@ -75,6 +76,12 @@ public class PersonController {
     		person.setNoHp(biodataRepository.getNoHpbyNik(nik));
     		person.setTanggalLahir(biodataRepository.getTanggalBynik(nik));
     		person.setTempatLahir(biodataRepository.getTempatByNik(nik));
+    		Date date= dto.getTanggalLahir();
+        	Calendar n= Calendar.getInstance();
+        	n.setTime(date);
+        	int tahunLahir= n.get(Calendar.YEAR);
+        	person.setUmur(2020-tahunLahir);
+        	person.setJenjangPendidikan(pendRepository.getJenjangbyNik(nik));
     	}
 		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
 		FilterProvider filters= new SimpleFilterProvider().addFilter("Data Yang Ditampilkan", filter);
@@ -83,7 +90,7 @@ public class PersonController {
 		return mapp;
     }
     @PostMapping
-    public messageDto insert(@RequestBody personDto dto) {
+    public MessageDto insert(@RequestBody PersonDto dto) {
     	Date date= dto.getTanggalLahir();
     	Calendar n= Calendar.getInstance();
     	n.setTime(date);
@@ -98,35 +105,35 @@ public class PersonController {
     	if (dto.getNik().length()!=16) {
     		return statusGagalNik();
     		
-    	}else if (2020-tahunLahir>=30) {
+    	}else if (2020-tahunLahir<30) {
     		return statusGagalUmur();
     	}
     	else {
-    		personEntity person= convertToEntity(dto);
+    		PersonEntity person= convertToEntity(dto);
     		personService.insertPerson(person);
     		dto.setIdPerson(person.getIdPerson());
-    		biodataEntity bio= convertToEntitybio(dto);
+    		BiodataEntity bio= convertToEntitybio(dto);
     		personService.insertBiodata(bio);
     	}
     	return statusBerhasil();
     }
     
-    private messageDto statusBerhasil() {
-    	messageDto dto= new messageDto();
+    private MessageDto statusBerhasil() {
+    	MessageDto dto= new MessageDto();
     	dto.setStatus("true");
     	dto.setMessage("Data Behasil Masuk");
     	return dto;
     }
-    private messageDto statusGagalNik() {
-    	messageDto dto = new messageDto();
+    private MessageDto statusGagalNik() {
+    	MessageDto dto = new MessageDto();
     	dto.setStatus("false");
     	dto.setMessage("jumlah nik tidak sama dengan 16 digit");
     	return dto;
     }
-    private messageDto statusGagalUmur() {
-    	messageDto dto= new messageDto();
+    private MessageDto statusGagalUmur() {
+    	MessageDto dto= new MessageDto();
     	dto.setStatus("false");
-    	dto.setMessage("Umur lebih dari 30 tahun");
+    	dto.setMessage("Umur kurang dari 30 tahun");
     	return dto;
     }
     
@@ -166,8 +173,8 @@ public class PersonController {
 //    }
  
   
-    public personEntity convertToEntity(personDto dto){
-        personEntity personEnt = new personEntity();
+    public PersonEntity convertToEntity(PersonDto dto){
+        PersonEntity personEnt = new PersonEntity();
         personEnt.setNama(dto.getNama());
         personEnt.setNik(dto.getNik());
         personEnt.setAlamat(dto.getAlamat());
@@ -187,12 +194,12 @@ public class PersonController {
 //        return personDto;
 //    }
 
-    private biodataEntity convertToEntitybio(personDto dto){
-        biodataEntity personEnt = new biodataEntity();
+    private BiodataEntity convertToEntitybio(PersonDto dto){
+        BiodataEntity personEnt = new BiodataEntity();
         personEnt.setTanggalLahir(dto.getTanggalLahir());
         personEnt.setTempatLahir(dto.getTempatLahir());
         personEnt.setNoHp(dto.getNoHp());
-        personEntity person =  personRepository.findById(dto.getIdPerson()).get();
+        PersonEntity person =  personRepository.findById(dto.getIdPerson()).get();
         personEnt.setPersonEntity(person);
         
         return personEnt;

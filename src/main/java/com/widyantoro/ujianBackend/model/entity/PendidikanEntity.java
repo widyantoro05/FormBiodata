@@ -11,13 +11,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="t_pendidikan")
-public class pendidikanEntity {
+public class PendidikanEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pendidikan", length = 25, nullable = false)
     private Integer idPendidikan;
 
-	@Column(name = "jenjang", length = 10, nullable = false)
+	@Column(name = "jenjang_pendidikan", length = 10, nullable = false)
     private String jenjang;
 	
 	@Column(name = "institusi", length = 50, nullable = false)
@@ -31,14 +31,14 @@ public class pendidikanEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_person",  nullable = false)
-	private personEntity person;
+	private PersonEntity person;
 
 //	set get person_id
-	public personEntity getPerson() {
+	public PersonEntity getPerson() {
 		return person;
 	}
 
-	public void setPerson(personEntity person) {
+	public void setPerson(PersonEntity person) {
 		this.person = person;
 	}
 // set get pendidikanentity
