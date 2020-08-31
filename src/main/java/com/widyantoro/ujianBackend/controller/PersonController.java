@@ -50,23 +50,37 @@ public class PersonController {
     @GetMapping("/{nik}")
     public MappingJacksonValue getDataByNik(@PathVariable String nik) { 
     	messageDto pesan =new messageDto();
-    	personDto person =new personDto();
-    	MessageDanPersonDto mp= new MessageDanPersonDto();
+    	MessageDanPersonDto person= new MessageDanPersonDto();
     	if (nik.length()!=16) {
     		pesan.setStatus("false");
     		pesan.setMessage("data gagal masuk, jumlah digit tidak sama dengan 16");
     		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
-    		FilterProvider filters= new SimpleFilterProvider().addFilter("MessageDanPersonDtoFilter", filter);
+    		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan error nik tidak sama sengan 16", filter);
     		MappingJacksonValue mapp= new MappingJacksonValue(pesan);
     		mapp.setFilters(filters);
     		return mapp;
     	}
-    	return null;
-//    	else if (nik==null) {
-//    		return statusGagalUmur();
-//    	}else {
-//    		return statusBerhasil();
-//    	}
+    	else if (personRepository.getNikByNik(nik)==null) {
+    		pesan.setStatus("false");
+    		pesan.setMessage("data gagal masuk" + nik + "tidak terdapat dalam database");
+    		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
+    		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan Error", filter);
+    		MappingJacksonValue mapp= new MappingJacksonValue(pesan);
+    		mapp.setFilters(filters);
+    		return mapp;
+    	}else {
+    		person.setNama(personRepository.getNamaByNik(nik));
+    		person.setAlamat(personRepository.getAlamatByNik(nik));
+    		person.setNik(personRepository.getNikByNik(nik));
+    		person.setNoHp(biodataRepository.getNoHpbyNik(nik));
+    		person.setTanggalLahir(biodataRepository.getTanggalBynik(nik));
+    		person.setTempatLahir(biodataRepository.getTempatByNik(nik));
+    	}
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
+		FilterProvider filters= new SimpleFilterProvider().addFilter("Data Yang Ditampilkan", filter);
+		MappingJacksonValue mapp= new MappingJacksonValue(person);
+		mapp.setFilters(filters);
+		return mapp;
     }
     @PostMapping
     public messageDto insert(@RequestBody personDto dto) {
