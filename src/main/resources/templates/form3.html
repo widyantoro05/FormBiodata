@@ -29,99 +29,28 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <div class="card-body">
-                            <div class="form-group">
-                                <label for="nama">Nama</label>
-                                <input type="text" class="form-control" name="nama" placeholder="masukan nama" required="">
-                            </div>
-                            <div class="form-group ">
-                                <label for="alamat ">Alamat</label>
-                                <textarea class=form-control rows="3" name="alamat" placeholder="masukan alamat" required=""></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="birthdaytime">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="birthdaytime" name="tanggal" required="">
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer ">
-                        </div>
-                    </div>
-                    <!-- /.container-fluid -->
-                </div>
-                <div class="col-md">
-                    <!-- general form elements -->
-                    <div class="card card-success ">
-                        <di v class="card-header ">
-                            <h3 class="card-title ">Data Peserta</h3>
-                        </di>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="agama">Agama</label><br>
-                                <select class="form-control" name="agama">
-                                    <option value="Islam">Islam</option>
-                                    <option value="Kristen">Kristen</option>
-                                    <option value="Hindu">Hindu</option>
-                                    <option value="Buddha">Buddha</option>
-                                    <option value="Konghuchu">Konghuchu</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="umur">Umur</label>
-                                <input type="number" class="form-control" name="umur" placeholder="masukan umur" required="">
-                            </div>
-                            <label for="Jk">Jenis Kelamin</label><br>
-                            <!-- radio -->
-                            <div class="col-sm-6">
-                                <!-- radio -->
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" value="laki-laki">
-                                        <label class=" form-check-label">Laki-laki</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" value="Perempuan">
-                                        <label class="form-check-label">Perempuan</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" value="Hybrid" type="radio" name="gender">
-                                        <label class="form-check-label">Hybrid</label>
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input class="form-control parsley-error" id="idnik" placeholder="cari dari nik" required="" type="text" >
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" id="cari" class="btn btn-success">Cari</button>
                                 </div>
                             </div>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer ">
+                        <div class="card-body">
+                            <div class="card-body">
+                                <table class="table table-striped table-bordered table-hover nowrap" id="tableBiodata3"
+                                style="width:100%"></table>
+                            </div>
                         </div>
                     </div>
                     <!-- /.container-fluid -->
                 </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-success swalDefaultSuccess">Submit</button>
-        </div>
-    </form>
-    <div class="card-body">
-        <table class="table table-hover text-nowrap">
-            <thead>
-                <tr>
-                    <td>Nama</td>
-                    <td>Alamat</td>
-                    <td>Tanggal Lahir</td>
-                    <td>Agama</td>
-                    <td>Umur</td>
-                    <td>Jenis Kelamin</td>
-                </tr>
-            </thead>
-            <tbody id="displayArea"></tbody>
-        </table>
+        </div> 
     </div>
-    <div class="card-footer">
-        <button type="submit" id="reset" class="btn btn-success swalDefaultInfo">
-            reset tabel
-          </button>
-    </div>
+    
 
 </html>

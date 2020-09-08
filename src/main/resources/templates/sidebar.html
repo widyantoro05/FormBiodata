@@ -176,9 +176,9 @@
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
+                            <ul id ="click" class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="form1" class="nav-link">
+                                    <a href="form1" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Formulir1</p>
                                     </a>
@@ -226,11 +226,16 @@
             <!-- /.content -->
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <!--input ke table-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
     <!-- jQuery -->
     <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:src="@{/docs/js/default.js}"></script>
+	<script th:src="@{/docs/js/biodata.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script th:src="@{/plugins/datatables/jquery.dataTables.js}"></script>
+	<script th:src="@{/plugins/datatables-bs4/js/dataTables.bootstrap4.js}"></script>
+    <!--input ke table-->
     <!-- Bootstrap 4 -->
     <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <!-- Toastr  sweetalert -->
@@ -243,26 +248,56 @@
     <script th:src="@{/dist/js/adminlte.min.js}"></script>
     <!-- AdminLTE for demo purposes -->
     <script th:src="@{/dist/js/demo.js}"></script>
-
-
-    <script type="text/javascript">
-        $('#myForm').submit(function(event) {
-            event.preventDefault();
-            var $inputs = $('#myForm :input');
-            var values = {};
-            $inputs.each(function() {
-                values[this.name] = $(this).val();
-            });
-            $('#displayArea').append("<tr><td>" + values.nama + "</td><td>" + values.alamat + "</td><td>" + values.tanggal + "</td><td>" + values.agama + "</td><td>" + values.umur + "</td><td>" + $("input[name='gender']:checked").val() + "</td></tr>");
-            $("input[type = text], textarea").val("");
-            $("input[type = date], date").val("");
-            $("input[type = number], number").val("");
+   	<!-- Data Tables Source -->
+    
+    
+    <script>
+// FORM3 CARI BY NIK
+        $('#cari').click(function () {
+            tableBiodata.create3();
         });
-        $("#reset").click(function() {
-            $("#displayArea").empty();
+
+// FORM2 POST DATA PENDIDIKAN
+        var dataTable= [];
+        tableBiodata.create2();
+        $('#btn-save-biodata2').click(function() {
+            var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+            // event.preventDefault();
+            // var $inputs = $('#form-biodata :input');
+            // var values = {};
+            // $inputs.each(function() {
+            // values[this.name] = $(this).val();
+            // });
+            // $('#displayArea').append("<tr><td>" + values.jenjang + "</td><td>" + values.institusi + "</td><td>" + values.tahunMasuk + "</td><td>" + values.tahunLulus + "</td></tr>");
+            dataTable.push(dataResult);
+            tableBiodata.create2();
+            $('#form-biodata')[0].reset();
+            $('#modal-biodata').modal('hide');
+            
+        });
+        $('#push').click(function () {
+            // formBiodata.saveForm();
+            $('#modal-biodata').modal('show');
+            $('#submitdata').attr('disabled',false);
+        });
+       
+        $('#submitdata').click(function () {
+            $('#submitdata').attr('disabled', true);
+            jenjangBiodata.saveForm2();
+        });
+// FORM1
+    	tableBiodata.create();
+        $('#submit').click(function () {
+            // formBiodata.saveForm();
+            $('#modal-biodata').modal('show');   
+            $('#btn-save-biodata').attr('disabled', false);
+           
+        });
+        $('#btn-save-biodata').click(function () {
+            formBiodata.saveFormEdit();
+            $('#btn-save-biodata').attr('disabled', true);
         });
     </script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 
     <script type="text/javascript">
         $(function() {

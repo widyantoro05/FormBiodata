@@ -9,8 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
@@ -25,6 +26,7 @@ public class BiodataEntity {
     private String noHp;
 	
 	@Column(name = "tanggal_lahir", nullable = false)
+	@JsonFormat(pattern="dd-MM-yyyy")
     private Date tanggalLahir;
 
 	@Column(name = "tempat_lahir",length = 50)
