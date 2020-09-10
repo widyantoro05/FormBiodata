@@ -1,5 +1,4 @@
 
-
 var tableBiodata = {
     create: function () {
         // jika table tersebut datatable, maka clear and dostroy
@@ -87,6 +86,13 @@ var tableBiodata = {
                             {
                                 title: "Tahun Lulus",
                                 data: "tahunLulus"
+                            },
+                            {
+                                title: "Action",
+                                data: null,
+                                render: function (data, type, full, meta) {
+                                    return "<button class='btn-primary' onclick=jenjangBiodata.setEdit('" + meta.row +	 "')>Edit</button>"
+                                }
                             }     
                         ]
                 });
@@ -106,7 +112,7 @@ var tableBiodata = {
         $.ajax({
             method: 'get',
             url: '/person/biodata/' + $('#idnik').val(),
-            success: function (dataReturn1, status, xhr) {
+            success: function (dataReturn1,	 status, xhr) {
                 $(function() {
                     const Toast = Swal.mixin({
                         toast: true,
@@ -276,14 +282,14 @@ var jenjangBiodata = {
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 5000
                     });
                     Toast.fire({
                         position: 'top-end',
                         icon: 'info',
                         title: 'status:' + dataReturn.status + '\n'+'message:' + dataReturn.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 5000
                     });
                 });
                 $("#id").val("");
@@ -295,11 +301,34 @@ var jenjangBiodata = {
                 dataTable=[];
             },
             error: function (err) {
-                console.log(err);
+                $(function() {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                    Toast.fire({
+                        position: 'top-end',
+                        icon: 'info',
+                        title: 'status:' + 'false' + '\n'+'message:' + 'data tidak sesuai atau id masih kosong',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                });
+                $('#submitdata').attr('disabled',false);
             }
         });
        
     
+    },setEdit: function (row) {
+        $('#modal-biodata').fromJSON(JSON.stringify(dataTable[row]));
+        $('#modal-biodata').modal('show');  
+        rows= row;  
+
+    },setSaveEdit: function () {
+        dataTable[rows]=getJsonForm($("#form-biodata").serializeArray(), true);
+        $('#modal-biodata').modal('hide');
     }
 
 }
@@ -309,37 +338,36 @@ var formBiodata = {
     resetForm: function () {
         $('#form-biodata')[0].reset();
     },
-    saveForm: function () {
+    saveFormEdit: function () {
         
-        var dataResult = getJsonForm($("#myForm").serializeArray(), true);
+        var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
 
         $.ajax({
-            url: '/person',
+            url: '/person/save',
             method: 'post',
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(dataResult),
-            success: function (dataReturn) {
-                if (dataReturn.xhr == 200 || dataReturn.xhr == 201) {
+            success: function (dataReturn3) {
+                if (dataReturn3.status == 'true') {
                     tableBiodata.create();
-                    $('#myForm')[0].reset();
-
+                    $('#form-biodata')[0].reset();
+                    $('#modal-biodata').modal('hide');
                 }
-                
-                console.log(dataReturn);
+                console.log(dataReturn3);
                 $(function() {
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 5000
                     });
                     Toast.fire({
                         position: 'top-end',
                         icon: 'info',
-                        title: 'status:' + dataReturn.status + '\n'+'message:' + dataReturn.message,
+                        title: 'status:' + dataReturn3.status + '\n'+'message:' + dataReturn3.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 5000
                     });
                 });
 
@@ -350,8 +378,7 @@ var formBiodata = {
         });
        
     }, 
-    saveFormEdit: function () {
-        
+    saveForm: function () {
         
         var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
 
@@ -361,18 +388,44 @@ var formBiodata = {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(dataResult),
-            success: function (res, status, xhr) {
-                if (xhr.status == 200 || xhr.status == 201) {
+            success: function (dataReturn2) {
+                if (dataReturn2.status == 'true') { 
                     tableBiodata.create();
                     $('#form-biodata')[0].reset();
-                    $('#modal-biodata').modal('hide');
-
-                } else {
 
                 }
+                $(function() {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                    Toast.fire({
+                        position: 'top-end',
+                        icon: 'info',
+                        title: 'status:' + dataReturn2.status + '\n'+'message:' + dataReturn2.message,
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                }); 
             },
             error: function (err) {
-                console.log(err);
+                $(function() {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                    Toast.fire({
+                        position: 'top-end',
+                        icon: 'info',
+                        title: 'status:' + 'false' + '\n'+'message:' + 'error, data tidak sesuai dengan yang diminta atau ada nilai null',
+                        showConfirmButton: false,
+                        timer: 5000
+                    });
+                });
             }
         });
    
@@ -387,10 +440,10 @@ var formBiodata = {
             success: function (res, status, xhr) {
                 if (xhr.status == 200 || xhr.status == 201) {
                     $('#modal-biodata').fromJSON(JSON.stringify(res));
-                    $('#modal-biodata').modal('show');                  
-                } else {
-
-                }
+                    $('#modal-biodata').modal('show');   
+                    $('#btn-save-biodata').attr('disabled', false);               
+                } 
+                edit=1;
             },
             error: function (err) {
                 console.log(err);

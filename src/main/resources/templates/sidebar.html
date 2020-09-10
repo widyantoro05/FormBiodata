@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | General Form Elements</title>
+    <title>Sistem | Pendataan Warga Negara Indonesia</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -32,10 +32,10 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../index3.html" class="nav-link">Home</a>
+                    <a href="home" class="nav-link">Beranda</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="#" class="nav-link">Kontak</a>
                 </li>
             </ul>
             <!-- SEARCH FORM -->
@@ -61,10 +61,10 @@
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                                <img src="../../dist/img/tyuzu.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
-                                        Brad Diesel
+                                        Mantan Ketiga
                                         <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
                                     </h3>
                                     <p class="text-sm">Call me whenever you can...</p>
@@ -77,10 +77,10 @@
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="../../dist/img/user4-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
-                                        John Pierce
+                                        Mantan Kedua
                                         <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
                                     </h3>
                                     <p class="text-sm">I got your message bro</p>
@@ -96,7 +96,7 @@
                                 <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
-                                        Nora Silvester
+                                        Mantan Pertama
                                         <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
                                     </h3>
                                     <p class="text-sm">The subject goes here</p>
@@ -145,21 +145,21 @@
         </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-light-primary elevation-4">
             <!-- Brand Logo -->
             <a href="../../index3.html" class="brand-link">
                 <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">IND 2015</span>
             </a>
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../../dist/img/dahyun.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block">Dahyun</a>
                     </div>
                 </div>
 
@@ -171,28 +171,26 @@
                         <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
-                                <p>
-                                    Forms
-                                    <i class="fas fa-angle-left right"></i>
+                                <p>Pendataan<i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul id ="click" class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="form1" class="nav-link active">
+                                    <a href="form1" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Formulir1</p>
+                                        <p>Formulir Biodata</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="form2" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Formulir2</p>
+                                        <p>Formulir Pendidikan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="form3" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Formulir3</p>
+                                        <p>Cari Data</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -253,15 +251,19 @@
     
     <script>
 // FORM3 CARI BY NIK
+// get data from database
         $('#cari').click(function () {
             tableBiodata.create3();
         });
 
 // FORM2 POST DATA PENDIDIKAN
+// push to list
+        var rows=-1;
         var dataTable= [];
+        // get data to datatable
         tableBiodata.create2();
         $('#btn-save-biodata2').click(function() {
-            var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+            
             // event.preventDefault();
             // var $inputs = $('#form-biodata :input');
             // var values = {};
@@ -269,33 +271,56 @@
             // values[this.name] = $(this).val();
             // });
             // $('#displayArea').append("<tr><td>" + values.jenjang + "</td><td>" + values.institusi + "</td><td>" + values.tahunMasuk + "</td><td>" + values.tahunLulus + "</td></tr>");
-            dataTable.push(dataResult);
-            tableBiodata.create2();
-            $('#form-biodata')[0].reset();
-            $('#modal-biodata').modal('hide');
+           
+            if (rows>= 0){
+                jenjangBiodata.setSaveEdit();
+                tableBiodata.create2();
+                $('#modal-biodata').modal('hide');
+            }else{
+                var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+                dataTable.push(dataResult);
+                tableBiodata.create2();
+                $('#modal-biodata').modal('hide');
+            }
             
         });
+       
+// show formulir
         $('#push').click(function () {
-            // formBiodata.saveForm();
+            rows=-1;
+            $('#form-biodata')[0].reset();
             $('#modal-biodata').modal('show');
             $('#submitdata').attr('disabled',false);
         });
-       
+// post formulir
         $('#submitdata').click(function () {
             $('#submitdata').attr('disabled', true);
             jenjangBiodata.saveForm2();
         });
 // FORM1
+//show formulir
+        var edit=0;
     	tableBiodata.create();
         $('#submit').click(function () {
-            // formBiodata.saveForm();
+            edit=0;
+            $('#idBio').val("");
+            $('#idPerson').val('');
+            $('#form-biodata')[0].reset();
             $('#modal-biodata').modal('show');   
             $('#btn-save-biodata').attr('disabled', false);
            
         });
+// post formulir
         $('#btn-save-biodata').click(function () {
-            formBiodata.saveFormEdit();
-            $('#btn-save-biodata').attr('disabled', true);
+            if (edit>0){
+                formBiodata.saveFormEdit();
+                $('#modal-biodata').modal('hide');
+                $('#btn-save-biodata').attr('disabled', true);
+            }else{
+                formBiodata.saveForm();
+                $('#modal-biodata').modal('hide');
+                $('#btn-save-biodata').attr('disabled', true);
+            }
         });
     </script>
 

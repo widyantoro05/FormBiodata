@@ -19,13 +19,13 @@ public class WebController {
 	public String formulir3() {
 		return "form3";
 	}
-	@GetMapping("sidebar")
+	@GetMapping("home")
 	public String sdbar() {
-		return "sidebar";
+		return "home";
 	}
-	@GetMapping("table")
+	@GetMapping("login")
 	public String tab() {
-		return "Tableform";
+		return "login";
 	}
 	
 

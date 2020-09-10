@@ -18,4 +18,6 @@ public interface BiodataRepository extends JpaRepository<BiodataEntity, Integer>
 	Date getTanggalBynik(String nik);
 	@Query(value="select tempat_lahir from t_biodata b inner join t_person p on b.id_person=p.id_person where nik = ?", nativeQuery = true)
 	String getTempatByNik(String nik);
+	@Query(value="select id_bio from t_biodata b inner join t_person p on b.id_person=p.id_person where nik = ?", nativeQuery = true)
+	Integer getidBioByNik(Integer nik);
 }

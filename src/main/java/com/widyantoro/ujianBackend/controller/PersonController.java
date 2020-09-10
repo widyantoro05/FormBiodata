@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.widyantoro.ujianBackend.model.dto.BiodataDtoGet;
 import com.widyantoro.ujianBackend.model.dto.MessageDanPersonDto;
 import com.widyantoro.ujianBackend.model.dto.MessageDto;
+import com.widyantoro.ujianBackend.model.dto.PersonBioDtoPost;
 import com.widyantoro.ujianBackend.model.dto.PersonDto;
 import com.widyantoro.ujianBackend.model.entity.BiodataEntity;
 import com.widyantoro.ujianBackend.model.entity.PersonEntity;
@@ -62,17 +63,17 @@ public class PersonController {
     }
     @GetMapping
     public List<PersonDto> get() {
-           List<PersonEntity> personList = (personRepository.findAll());
+           List<BiodataEntity> bioList = (biodataRepository.findAll());
            List<PersonDto> coba= new ArrayList<>();
-           for (PersonEntity b: personList) {
+           for (BiodataEntity b: bioList) {
         	   PersonDto dto= new PersonDto();
-        	   dto.setIdPerson(b.getIdPerson());
-        	   dto.setAlamat(b.getAlamat());
-        	   dto.setNama(b.getNama());
-        	   dto.setNik(b.getNik());
-        	   dto.setNoHp(biodataRepository.getNoHpbyNik(b.getNik()));
-        	   dto.setTanggalLahir(biodataRepository.getTanggalBynik(b.getNik()));
-        	   dto.setTempatLahir(biodataRepository.getTempatByNik(b.getNik()));
+        	   dto.setNoHp(b.getNoHp());
+        	   dto.setTempatLahir(b.getTempatLahir());
+        	   dto.setTanggalLahir(b.getTanggalLahir());
+        	   dto.setIdPerson(b.getPersonEntity().getIdPerson());
+        	   dto.setAlamat(b.getPersonEntity().getAlamat());
+        	   dto.setNama(b.getPersonEntity().getNama());
+        	   dto.setNik(b.getPersonEntity().getNik());
         	   coba.add(dto);
            }
            return coba;
@@ -121,32 +122,29 @@ public class PersonController {
 		mapp.setFilters(filters);
 		return mapp;
     }
+//    get mapping for edit by id person
     @GetMapping("/{idPerson}")
-    public PersonDto getdtabyid(@PathVariable Integer idPerson) {
+    public PersonBioDtoPost getdtabyid(@PathVariable Integer idPerson) {
     	PersonEntity perent= personRepository.findById(idPerson).get();
     	BiodataEntity bioent= biodataRepository.findById(idPerson).get();
-    	PersonDto person= new PersonDto();
+    	PersonBioDtoPost person= new PersonBioDtoPost();
     	person.setNoHp(bioent.getNoHp());
     	person.setTanggalLahir(bioent.getTanggalLahir());
     	person.setTempatLahir(bioent.getTempatLahir());
     	person.setNama(bioent.getPersonEntity().getNama());
     	person.setAlamat(bioent.getPersonEntity().getAlamat());
     	person.setNik(bioent.getPersonEntity().getNik());
-    	return person;
-    			
+    	person.setIdBio(bioent.getIdBio());
+    	person.setIdPerson(perent.getIdPerson());
+    	return person;			
     }
+//    Post Biasa
     @PostMapping
     public MessageDto insert(@RequestBody PersonDto dto) {
     	Date date= dto.getTanggalLahir();
     	Calendar n= Calendar.getInstance();
     	n.setTime(date);
-    	int tahunLahir= n.get(Calendar.YEAR);
-//    	Calendar nm= Calendar.getInstance();
-//    	Date nmn= nm.getTime();
-//    	n.setTime(nmn);
-//    	int tahunSekarang= n.get(Calendar.YEAR);
-//    	
-//    	
+    	int tahunLahir= n.get(Calendar.YEAR);	
     	
     	if (dto.getNik().length()!=16) {
     		return statusGagalNik();
@@ -163,7 +161,72 @@ public class PersonController {
     	}
     	return statusBerhasil();
     }
-    
+    public PersonEntity convertToEntity(PersonDto dto){
+        PersonEntity personEnt = new PersonEntity();
+        personEnt.setNama(dto.getNama());
+        personEnt.setNik(dto.getNik());
+        personEnt.setAlamat(dto.getAlamat());
+        return personEnt;
+    }
+
+    private BiodataEntity convertToEntitybio(PersonDto dto){
+        BiodataEntity personEnt = new BiodataEntity();
+        personEnt.setTanggalLahir(dto.getTanggalLahir());
+        personEnt.setTempatLahir(dto.getTempatLahir());
+        personEnt.setNoHp(dto.getNoHp());
+        PersonEntity person =  personRepository.findById(dto.getIdPerson()).get();
+        personEnt.setPersonEntity(person);
+        
+        return personEnt;
+    }
+//    Post Edit
+    @PostMapping("/save")
+    public MessageDto EditSave(@RequestBody PersonBioDtoPost dto) {
+    	Date date= dto.getTanggalLahir();
+    	Calendar n= Calendar.getInstance();
+    	n.setTime(date);
+    	int tahunLahir= n.get(Calendar.YEAR);
+ 	
+    	if (dto.getNik().length()!=16) {
+    		return statusGagalNik();
+    		
+    	}else if (2020-tahunLahir<30) {
+    		return statusGagalUmur();
+    	}
+    	else {
+    		PersonEntity person= convertToEntity(dto);
+    		personService.insertPerson(person);
+    		BiodataEntity bio= convertToEntitybio(dto);
+    		personService.insertBiodata(bio);
+    	}
+    	return statusBerhasilSave();
+    }
+    public PersonEntity convertToEntity(PersonBioDtoPost dto){
+        PersonEntity personEnt = new PersonEntity();
+        personEnt.setNama(dto.getNama());
+        personEnt.setNik(dto.getNik());
+        personEnt.setAlamat(dto.getAlamat());
+        personEnt.setIdPerson(dto.getIdPerson());
+        return personEnt;
+    }
+
+    private BiodataEntity convertToEntitybio(PersonBioDtoPost dto){
+        BiodataEntity personEnt = new BiodataEntity();
+        personEnt.setTanggalLahir(dto.getTanggalLahir());
+        personEnt.setTempatLahir(dto.getTempatLahir());
+        personEnt.setNoHp(dto.getNoHp());
+        personEnt.setIdBio(dto.getIdBio());
+        PersonEntity person =  personRepository.findById(dto.getIdPerson()).get();
+        personEnt.setPersonEntity(person);
+        
+        return personEnt;
+    }
+    private MessageDto statusBerhasilSave() {
+    	MessageDto dto= new MessageDto();
+    	dto.setStatus("true");
+    	dto.setMessage("Data Behasil di Edit");
+    	return dto;
+    }
     private MessageDto statusBerhasil() {
     	MessageDto dto= new MessageDto();
     	dto.setStatus("true");
@@ -182,6 +245,7 @@ public class PersonController {
     	dto.setMessage("Umur kurang dari 30 tahun");
     	return dto;
     }
+   
     
     
 //    private List<personDto> get() {
@@ -218,27 +282,5 @@ public class PersonController {
 //        return dto;
 //    }
  
-  
-    public PersonEntity convertToEntity(PersonDto dto){
-        PersonEntity personEnt = new PersonEntity();
-        personEnt.setNama(dto.getNama());
-        personEnt.setNik(dto.getNik());
-        personEnt.setAlamat(dto.getAlamat());
-        return personEnt;
-    }
-  
- 
-  
-
-    private BiodataEntity convertToEntitybio(PersonDto dto){
-        BiodataEntity personEnt = new BiodataEntity();
-        personEnt.setTanggalLahir(dto.getTanggalLahir());
-        personEnt.setTempatLahir(dto.getTempatLahir());
-        personEnt.setNoHp(dto.getNoHp());
-        PersonEntity person =  personRepository.findById(dto.getIdPerson()).get();
-        personEnt.setPersonEntity(person);
-        
-        return personEnt;
-    }
 
 }
