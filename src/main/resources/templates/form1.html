@@ -85,33 +85,33 @@
                                 <div class="card-header">
             
                                 </div>
-                                <form id="form-biodata" role="form">
+                                <form id="form-biodata" role="form" >
                                     <input name="idPerson" id="idPerson" type="hidden"/>
                                     <input name="idBio" id="idBio" type="hidden"/>
             
                                     <div class="form-group">
                                         <label>NIK</label>
-                                        <input class="form-control parsley-error" id="nik" name="nik" placeholder="masukan NIK" required="" type="text" >
+                                        <input class="form-control" id="nik" name="nik" placeholder="masukan NIK" required data-parsley-length="[16,16]" type="text">
                                     </div>
                                     <div class="form-group">
                                         <label>Nama Lengkap </label>
-                                        <input class="form-control parsley-error" id="nama" name="nama" placeholder="masukan nama" required="" type="text" >
+                                        <input class="form-control" id="nama" name="nama" placeholder="masukan nama" required type="text" >
                                     </div>
                                     <div class="form-group">
                                         <label for="alamat">Alamat</label>
-                                        <textarea class="form-control parsley-error" id="alamat" name="alamat" placeholder="masukan alamat" required="" type="text" rows="3"></textarea>
+                                        <textarea class="form-control" id="alamat" name="alamat" placeholder="masukan alamat" required type="text" rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>No HP</label>
-                                        <input class="form-control parsley-error" id="noHp" name="noHp" placeholder="masukan noHP" required="" type="text" >
+                                        <input class="form-control" id="noHp" name="noHp" placeholder="masukan noHP" required data-parsley-type="digits" >
                                     </div>
                                     <div class="form-group">
                                         <label for="tanggal">Tanggal Lahir</label>
-                                        <input type="date" class="form-control parsley-error" id ="tanggalLahir" name="tanggalLahir" required="">
+                                        <input type="date" class="form-control" id ="tanggalLahir" name="tanggalLahir" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Tempat Lahir</label>
-                                        <input class="form-control parsley-error" id="tempatLahir" name="tempatLahir" placeholder="masukan Tempat Lahir" required="" type="text" >
+                                        <input class="form-control" id="tempatLahir" name="tempatLahir" placeholder="masukan Tempat Lahir" required type="text" >
                                     </div>
             
                                 </form>

@@ -268,9 +268,8 @@ var jenjangBiodata = {
         //     TableData.shift();  // first row will be empty - so remove
         //     return TableData;
         // }
-        
-
         $.ajax({
+            
             url: '/pendidikan/' + $('#id').val(),
             method: 'post',
             contentType: 'application/json',
@@ -319,7 +318,7 @@ var jenjangBiodata = {
                 $('#submitdata').attr('disabled',false);
             }
         });
-       
+            
     
     },setEdit: function (row) {
         $('#modal-biodata').fromJSON(JSON.stringify(dataTable[row]));
@@ -339,95 +338,103 @@ var formBiodata = {
         $('#form-biodata')[0].reset();
     },
     saveFormEdit: function () {
-        
-        var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
 
-        $.ajax({
-            url: '/person/save',
-            method: 'post',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(dataResult),
-            success: function (dataReturn3) {
-                if (dataReturn3.status == 'true') {
-                    tableBiodata.create();
-                    $('#form-biodata')[0].reset();
-                    $('#modal-biodata').modal('hide');
+        if ($('#form-biodata').parsley().validate()){
+            
+            var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+
+            $.ajax({
+                url: '/person/save',
+                method: 'post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(dataResult),
+                success: function (dataReturn3) {
+                    if (dataReturn3.status == 'true') {
+                        tableBiodata.create();
+                        $('#form-biodata')[0].reset();
+                        $('#modal-biodata').modal('hide');
+                    }
+                    console.log(dataReturn3);
+                    $(function() {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                        Toast.fire({
+                            position: 'top-end',
+                            icon: 'info',
+                            title: 'status:' + dataReturn3.status + '\n'+'message:' + dataReturn3.message,
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                    });
+                    
+                    $('#modal-biodata').modal('hide'); 
+
+                },
+                error: function (err) {
+                    console.log(err);
                 }
-                console.log(dataReturn3);
-                $(function() {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                    Toast.fire({
-                        position: 'top-end',
-                        icon: 'info',
-                        title: 'status:' + dataReturn3.status + '\n'+'message:' + dataReturn3.message,
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                });
-
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
+            });
+        }
        
     }, 
     saveForm: function () {
-        
-        var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+        if ($('#form-biodata').parsley().validate()){
+            var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
 
-        $.ajax({
-            url: '/person',
-            method: 'post',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(dataResult),
-            success: function (dataReturn2) {
-                if (dataReturn2.status == 'true') { 
-                    tableBiodata.create();
-                    $('#form-biodata')[0].reset();
+            $.ajax({
+                url: '/person',
+                method: 'post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(dataResult),
+                success: function (dataReturn2) {
+                    if (dataReturn2.status == 'true') { 
+                        tableBiodata.create();
+                        $('#form-biodata')[0].reset();
 
+                    }
+                    $(function() {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                        Toast.fire({
+                            position: 'top-end',
+                            icon: 'info',
+                            title: 'status:' + dataReturn2.status + '\n'+'message:' + dataReturn2.message,
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                    });
+                    
+                    $('#modal-biodata').modal('hide'); 
+                },
+                error: function (err) {
+                    $(function() {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                        Toast.fire({
+                            position: 'top-end',
+                            icon: 'info',
+                            title: 'status:' + 'false' + '\n'+'message:' + 'error, data tidak sesuai dengan yang diminta atau ada nilai null',
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
+                    });
                 }
-                $(function() {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                    Toast.fire({
-                        position: 'top-end',
-                        icon: 'info',
-                        title: 'status:' + dataReturn2.status + '\n'+'message:' + dataReturn2.message,
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                }); 
-            },
-            error: function (err) {
-                $(function() {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                    Toast.fire({
-                        position: 'top-end',
-                        icon: 'info',
-                        title: 'status:' + 'false' + '\n'+'message:' + 'error, data tidak sesuai dengan yang diminta atau ada nilai null',
-                        showConfirmButton: false,
-                        timer: 5000
-                    });
-                });
-            }
-        });
+            });
+        }
    
     },setEditData: function (idPerson) {
         formBiodata.resetForm();
