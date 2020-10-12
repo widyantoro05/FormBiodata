@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sistem | Pendataan Warga Negara Indonesia</title>
+    <!-- Tell  browser to be responsive to screen wid-->
+    <meta name="viewport" content="widdevice-wid initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- sweetalert -->
+    <link rel="stylesheet" href="assets/plugins/sweetalert2-me-bootstrap-4/bootstrap-4.min.css">
+    <!-- toast -->
+    <link rel="stylesheet" href="assets/plugins/toastr/toastr.min.css">
+    <!-- meStyle -->
+    <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <style>
+      input.parsley-success,
+      select.parsley-success,
+      textarea.parsley-success {
+          color: #468847;
+          background-color: #DFF0D8;
+          border: 1px solid #D6E9C6;
+      }
+
+
+      input.parsley-error,
+      select.parsley-error,
+      textarea.parsley-error {
+          color: #B94A48;
+          background-color: #F2DEDE;
+          border: 1px solid #EED3D7;
+      }
+
+      .parsley-errors-list {
+          margin: 2px 0 3px;
+          padding: 0;
+          list-style-type: none;
+          font-size: 0.9em;
+          line-height: 0.9em;
+          opacity: 0;
+          color: #B94A48;
+
+          transition: all .3s ease-in;
+          -o-transition: all .3s ease-in;
+          -moz-transition: all .3s ease-in;
+          -webkit-transition: all .3s ease-in;
+      }
+
+      .parsley-errors-list.filled {
+          opacity: 1;
+      }
+  </style> 
+  </head>
+  <body class="hold-transition skin-blue sidebar-mini">
+    <div id="root"></div>
+ 
+    <script src="assets/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="assets/docs/js/default.js"></script>
+    <script src="assets/docs/js/biodata.js"></script>
+    <script src="assets/docs/js/parsley.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="assets/plugins/datatables/jquery.dataTables.js"></script>
+	  <script src="assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+    <!--input ke table-->
+    <!-- Bootstrap 4 -->
+    <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Toastr  sweetalert -->
+    <script src="assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Toastr -->
+    <script src="assets/plugins/toastr/toastr.min.js"></script>
+    <!-- bs-custom-file-input -->
+    <script src="assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="assets/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="assets/dist/js/demo.js"></script>
+     <!-- Data Tables Source -->
+     
+    <script>
+// FORM3 CARI BY NIK
+// get data from database
+      $('#cari').click(function () {
+          tableBiodata.create3();
+      });
+
+// FORM2 POST DATA PENDIDIKAN
+// push to list
+      var rows=-1;
+      var dataTable= [];
+// get data to datatable
+      tableBiodata.create2();
+      $('#btn-save-biodata2').click(function() {
+            
+            // event.preventDefault();
+            // var $inputs = $('#form-biodata :input');
+            // var values = {};
+            // $inputs.each(function() {
+            // values[this.name] = $(this).val();
+            // });
+            // $('#displayArea').append("<tr><td>" + values.jenjang + "</td><td>" + values.institusi + "</td><td>" + values.tahunMasuk + "</td><td>" + values.tahunLulus + "</td></tr>");
+            
+        if (rows>= 0){
+            jenjangBiodata.setSaveEdit();
+            tableBiodata.create2();
+            $('#modal-biodata').modal('hide');
+        }else{
+            var dataResult = getJsonForm($("#form-biodata").serializeArray(), true);
+            dataTable.push(dataResult);
+            tableBiodata.create2();
+            $('#modal-biodata').modal('hide');
+        }    
+      });
+        
+// show formulir
+      $('#push').click(function () {
+          rows=-1;
+          $('#form-biodata')[0].reset();
+          $('#modal-biodata').modal('show');
+          $('#submitdata').attr('disabled',false);
+      });
+// post formulir
+      $('#submitdata').click(function () {
+          $('#submitdata').attr('disabled', true);
+          jenjangBiodata.saveForm2();
+      });
+// FORM1
+//show formulir
+      var edit=0;
+      tableBiodata.create();
+      $('#submit').click(function () {
+          edit=0;
+          $('#idBio').val("");
+          $('#idPerson').val('');
+          $('#form-biodata')[0].reset();
+          $('#modal-biodata').modal('show');   
+          $('#btn-save-biodata').attr('disabled', false);
+      });
+// post formulir
+      $('#btn-save-biodata').click(function () {
+          if (edit>0){
+              formBiodata.saveFormEdit();
+          }else{
+              formBiodata.saveForm();
+          }
+      });
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+          const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000
+          }); 
+          $('.swalDefaultSuccess').click(function() {
+              Toast.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: 'Your form has been saved',
+                  showConfirmButton: false,
+                  timer: 1500
+              })
+          });
+          $('.swalDefaultInfo').click(function() {
+              Toast.fire({
+                  position: 'top-end',
+                  icon: 'info',
+                  title: 'Your form has been reset',
+                  showConfirmButton: false,
+                  timer: 1500
+              })
+          });
+          $('.swalDefaultError').click(function() {
+              Toast.fire({
+                  type: 'error',
+                  title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.swalDefaultWarning').click(function() {
+              Toast.fire({
+                  type: 'warning',
+                  title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.swalDefaultQuestion').click(function() {
+              Toast.fire({
+                  type: 'question',
+                  title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+
+          $('.toastrDefaultSuccess').click(function() {
+              toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+          });
+          $('.toastrDefaultInfo').click(function() {
+              toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+          });
+          $('.toastrDefaultError').click(function() {
+              toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+          });
+          $('.toastrDefaultWarning').click(function() {
+              toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+          });
+
+          $('.toastsDefaultDefault').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultTopLeft').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  position: 'topLeft',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultBottomRight').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  position: 'bottomRight',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultBottomLeft').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  position: 'bottomLeft',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultAutohide').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  autohide: true,
+                  delay: 750,
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultNotFixed').click(function() {
+              $(document).Toasts('create', {
+                  title: 'Toast Title',
+                  fixed: false,
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultFull').click(function() {
+              $(document).Toasts('create', {
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+                  title: 'Toast Title',
+                  subtitle: 'Subtitle',
+                  icon: 'fas fa-envelope fa-lg',
+              })
+          });
+          $('.toastsDefaultFullImage').click(function() {
+              $(document).Toasts('create', {
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+                  title: 'Toast Title',
+                  subtitle: 'Subtitle',
+                  image: '../../dist/img/user3-128x128.jpg',
+                  imageAlt: 'User Picture',
+              })
+          });
+          $('.toastsDefaultSuccess').click(function() {
+              $(document).Toasts('create', {
+                  class: 'bg-success',
+                  title: 'Selamat',
+                  subtitle: 'Subtitle',
+                  body: 'Anda Mendapatkan iphone.'
+              })
+          });
+          $('.toastsDefaultInfo').click(function() {
+              $(document).Toasts('create', {
+                  class: 'bg-info',
+                  title: 'Toast Title',
+                  subtitle: 'Subtitle',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultWarning').click(function() {
+              $(document).Toasts('create', {
+                  class: 'bg-warning',
+                  title: 'reset tabel',
+                  body: 'Tabel anda telah tereset kembali.'
+              })
+          });
+          $('.toastsDefaultDanger').click(function() {
+              $(document).Toasts('create', {
+                  class: 'bg-danger',
+                  title: 'Toast Title',
+                  subtitle: 'Subtitle',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+          $('.toastsDefaultMaroon').click(function() {
+              $(document).Toasts('create', {
+                  class: 'bg-maroon',
+                  title: 'Toast Title',
+                  subtitle: 'Subtitle',
+                  body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+              })
+          });
+      });
+    </script>
+      
+  </body>
+</html>

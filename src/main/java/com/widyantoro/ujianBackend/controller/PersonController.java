@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ import com.widyantoro.ujianBackend.service.PersonService;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/person")
 public class PersonController {
 	private final PersonRepository personRepository;
@@ -84,7 +86,7 @@ public class PersonController {
     	MessageDanPersonDto person= new MessageDanPersonDto();
     	
     	if (nik.length()!=16) {
-    		pesan.setStatus("false");
+    		pesan.setStatus("salah");
     		pesan.setMessage("data gagal masuk, jumlah digit tidak sama dengan 16");
     		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
     		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan error nik tidak sama sengan 16", filter);
@@ -93,7 +95,7 @@ public class PersonController {
     		return mapp;
     	}
     	else if (personRepository.getNikByNik(nik)==null) {
-    		pesan.setStatus("false");
+    		pesan.setStatus("salah");
     		pesan.setMessage("data gagal masuk" +" "+ nik +" "+ "tidak terdapat dalam database");
     		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("status","message");
     		FilterProvider filters= new SimpleFilterProvider().addFilter("Pesan Error tidak ada niknya", filter);
